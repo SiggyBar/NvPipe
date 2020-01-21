@@ -11,6 +11,8 @@
 
 #pragma once
 #include <iomanip>
+#include <ios>
+#include <sstream>
 #include <chrono>
 #include <sys/stat.h>
 #include <assert.h>
@@ -84,7 +86,9 @@ inline bool check(NVENCSTATUS e, int iLine, const char *szFile) {
 #ifdef _WINERROR_
 inline bool check(HRESULT e, int iLine, const char *szFile) {
     if (e != S_OK) {
-        LOG(FATAL) << "HRESULT error 0x" << (void *)e << " at line " << iLine << " in file " << szFile;
+        std::stringstream stream;
+        stream << std::hex << std::uppercase << e;
+        LOG(FATAL) << "HRESULT error 0x" << stream.str() << " at line " << iLine << " in file " << szFile;
         return false;
     }
     return true;
